@@ -28,13 +28,14 @@ class MyApp:
         # create 2 frames used to separate the window into multiple parts
         frameL = tk.Frame(self.window, bg="red")
         frameR = tk.Frame(self.window, bg="yellow")
-        frameL.grid(row=1,column=0)
+        frameL.grid(row=1,column=0,sticky=N+S)
         frameR.grid(row=1,column=2)
-        frameL.columnconfigure([0,1,2,3], minsize=30, weight=1)
+        frameL.columnconfigure([0,1], minsize=30, weight=1)
         frameR.columnconfigure([0,1,2], minsize=30, weight=1)
-        frameR.rowconfigure(1, minsize=300, weight=1)
-        frameL.rowconfigure([0,1,2,3], minsize=30, weight=1)
+        frameL.rowconfigure(0, minsize=50, weight=1)
+        frameL.rowconfigure([1,2,3], minsize=20, weight=1)
         frameR.rowconfigure([0,2,3], minsize=30, weight=1)
+        frameR.rowconfigure(1, minsize=300, weight=1)
 ####
         #runs once upon opening the app and displays the global chat (every chat is global currently so the first one)
         # Create a Label at the top with the chatroom's name
@@ -43,10 +44,10 @@ class MyApp:
 
         # Create a text box for displaying chat history and another for inputtin new messages
         text_box_chat = tk.Text(master=frameR)
-        text_box_entry = tk.Entry(master=frameR)
+        entry_box = tk.Entry(master=frameR)
 
         text_box_chat.grid(row=1,column=2,sticky=W)
-        text_box_entry.grid(row=2,column=2)
+        entry_box.grid(row=2,column=2)
 
         for i in chathistory:
             text_box_chat.insert(tk.END, chathistory[i]["Name"]+"\n")
@@ -64,7 +65,7 @@ class MyApp:
         chatnumber=0
         def on_button_click():
             # Retrieve the text from the text box
-            newtext = text_box_entry.get()
+            newtext = entry_box.get()
             x = datetime.datetime.now()
             # save newly wrote message in file
             microseconds=x.strftime("%f")
@@ -78,13 +79,13 @@ class MyApp:
             text_box_chat.insert(tk.END, x.strftime("%H") + ":")
             text_box_chat.insert(tk.END, x.strftime("%M") + "\n")
             text_box_chat.insert(tk.END, newtext + "\n" + "\n")
-            text_box_entry.delete(0, tk.END)
+            entry_box.delete(0, tk.END)
 
 
         post_comment_button = tk.Button(master=frameR, text="Submit", command=on_button_click)
         post_comment_button.grid(row=4,column=2)
 ####
-        def Refresh_Chat_room(chatnumber=0, chatname="Chat"):
+        def Refresh_Chat_room(chatnumber=0, chatname="0"):
                 #open new chat history
                 with open("chathistory_"+str(chatnumber)+".json", "r") as f:
                     chathistory = {}
@@ -94,7 +95,7 @@ class MyApp:
                 label_chatname["text"] = chatname
 
                 #empty chatbox then fill it with new chaat history
-                text_box_chat.delete(0, tk.END)
+                text_box_chat.delete('1.0', tk.END)
                 for i in chathistory:
                     text_box_chat.insert(tk.END, chathistory[i]["Name"]+"\n")
                     text_box_chat.insert(tk.END, i+"\n")
@@ -108,11 +109,21 @@ class MyApp:
             try:
                 with open("chathistory_"+str(i)+".json", "r") as f:
                     open_chat_button = tk.Button(master=frameL, text=str(i))
-                    open_chat_button.bind("<Button-1>", lambda event: Refresh_Chat_room(chatnumber=i,chatname=str(i)))
-                    open_chat_button.grid(row=i,column=2)
+                    open_chat_button.bind("<Button-1>", lambda event, x=i: Refresh_Chat_room(chatnumber=x,chatname=str(x)))
+                    open_chat_button.grid(row=i,column=1,sticky=NW+SE)
                     i+=1
             except:
                 more_chatrooms = False
+
+        def New_Chat_room():
+            with open("chathistory_"+i+".json", "w") as f:
+                Refresh_Chat_room(chatnumber=i,chatname=str(i))
+                new_chat_button.configure(text=i)
+
+
+        new_chat_button = tk.Button(master=frameL, text="+")
+        new_chat_button.bind("<Button-1>", lambda event: New_Chat_room())
+        new_chat_button.grid(row=i,column=1,sticky=NW+SE)
         
 
     # Start the main event loop of the window

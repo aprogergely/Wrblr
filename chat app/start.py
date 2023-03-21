@@ -12,6 +12,7 @@ import tkinter as tk
 try:
         savedaccount = open("account.txt", "r")
         nextwindow = chat.MyApp(savedaccount.readline())
+        savedaccount.close()
         nextwindow.start()
 except:
         nextwindow = registering.MyApp()

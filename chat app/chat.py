@@ -3,6 +3,7 @@ import datetime
 import tkinter as tk
 from tkinter import *
 from tkinter import ttk
+import os
 
 class MyApp:
     def __init__(self, username):
@@ -36,6 +37,17 @@ class MyApp:
         frameL.rowconfigure([1,2,3], minsize=20, weight=1)
         frameR.rowconfigure([0,2,3], minsize=30, weight=1)
         frameR.rowconfigure(1, minsize=300, weight=1)
+
+        # Create a menu... uhm... I mean sign out button... or listbox... or whatever
+        choices = ["Log out"]
+        choicesvar = StringVar(value=choices)
+        Menu = Listbox(self.window, listvariable=choicesvar)
+        Menu.grid(row=0,column=0)
+        Menu.bind("<Double-1>", lambda e: Logout())
+
+        def Logout():
+            os.remove("account.txt")
+            self.window.destroy()
 ####
         #runs once upon opening the app and displays the global chat (every chat is global currently so the first one)
         # Create a Label at the top with the chatroom's name

@@ -42,7 +42,7 @@ class MyApp:
         label_password.grid(row=3,column=2)
         label_login.grid(row=7,column=2)
 
-        # Create a button
+        # Create a button used to submit login details
         def on_button_click():
             # Retrieve the text from the text box
             with open("logindata.json", "r") as f:
@@ -54,10 +54,16 @@ class MyApp:
                 all_user_login_data[username]
                 print("User already exists!")
             except:
-                all_user_login_data[username]=password
-                with open("logindata.json", "w") as f:
-                    json.dump(all_user_login_data,f)
-                print("Account creation successful!")
+                if len(username)>2 & len(username)<21:
+                    if len(password)>7 & len(password)<51:
+                        all_user_login_data[username]=password
+                        with open("logindata.json", "w") as f:
+                            json.dump(all_user_login_data,f)
+                        print("Account creation successful!")
+                    else:
+                        print("Password needs to be between 8 and 50 characters long!")
+                else:
+                    print("Username needs to be between 3 and 20 characters long!")
 
         def go_to_login():
             self.window.destroy()

@@ -11,7 +11,8 @@ class ExcelWriter():
         for line in list:
             empty_cell = sheet.max_row + 1
             sheet.cell(row=empty_cell, column=1).value = line
-            wb.save(file)
+            wb.save(path+"/"+file)
+            #print(str(line)+"saved to" +str(empty_cell))
 
 class APICaller():
     def make_api_call(self, link):
@@ -20,13 +21,7 @@ class APICaller():
         response = requests.get(link)#, params=params, headers=headers)
         if response.status_code == 200:
             xml_content = response.content
-            #return(xml_content)
-            root = ET.fromstring(xml_content)
-            rate = root.findall("PLANT")
-            result=[]
-            for x in rate:
-                result.append(x.find("BOTANICAL").text)
-            return(result)
+            return(xml_content)
 
 class IOHandler():
     def read_input(self):
@@ -38,23 +33,25 @@ class IOHandler():
 
 class ListFromXMLData():
     def CreateList(self, xml):
-        selected_data = ()
-        for data_row in xml:
-            selected_data.append(data_row)
+        root = ET.fromstring(xml)
+        rate = root.findall("PLANT")
+        result=[]
+        for x in rate:
+            result.append(x.find("BOTANICAL").text)
+        return(result)
 
-        return selected_data
-
-        
-
-
-
-#valuta=("gbp", "aud", "dkk", "jpy", "cad", "nok", "chf", "sek", "usd", "czk", "pln", "eur", "hrk", "ron", "try")
 
 
 
 arfolyam = APICaller()
-print(arfolyam.make_api_call("https://www.w3schools.com/xml/plant_catalog.xml"))
+flowers=arfolyam.make_api_call("https://www.w3schools.com/xml/plant_catalog.xml")
 
-#excel=ExcelWriter()
+xmldata = ListFromXMLData()
+list=xmldata.CreateList(flowers)
+
+excel=ExcelWriter()
 #list=("3", "hello", "pingvin", "43edg52")
-#excel.write_data(list)
+excel.write_data(list)
+
+#for line in list:
+  #  print(line)

@@ -39,19 +39,3 @@ class ListFromXMLData():
         for x in rate:
             result.append(x.find("BOTANICAL").text)
         return(result)
-
-
-
-
-arfolyam = APICaller()
-flowers=arfolyam.make_api_call("https://www.w3schools.com/xml/plant_catalog.xml")
-
-xmldata = ListFromXMLData()
-list=xmldata.CreateList(flowers)
-
-excel=ExcelWriter()
-#list=("3", "hello", "pingvin", "43edg52")
-excel.write_data(list)
-
-#for line in list:
-  #  print(line)

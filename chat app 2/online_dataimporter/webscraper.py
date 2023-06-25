@@ -8,9 +8,15 @@ class ExcelWriter():
         file = "Excel.xlsx"
         wb = openpyxl.load_workbook(str(path) +'/' + str(file))
         sheet = wb.active
+
+        headers = ['COMMON', 'BOTANICAL', 'ZONE', 'LIGHT', 'PRICE', 'AVAILABILITY']
+        col = headers.index(list[0]) + 1
+
+        empty_cell = 0
         for line in list:
-            empty_cell = sheet.max_row + 1
-            sheet.cell(row=empty_cell, column=1).value = line
+            empty_cell = empty_cell+1#sheet.max_row + 1
+            if line != "":
+              sheet.cell(row=empty_cell, column=col).value = line
             wb.save(path+"/"+file)
             #print(str(line)+"saved to" +str(empty_cell))
 
@@ -32,10 +38,18 @@ class IOHandler():
         print(output)
 
 class ListFromXMLData():
-    def CreateList(self, xml):
+    def CreateList(self, xml, TAG):
         root = ET.fromstring(xml)
-        rate = root.findall("PLANT")
-        result=[]
-        for x in rate:
-            result.append(x.find("BOTANICAL").text)
-        return(result)
+        selected_data=[TAG]
+        for plant in root.findall("PLANT"):
+            try:
+                data_row = plant.find(TAG).text
+            except:
+                data_row = ""
+            
+            selected_data.append(data_row)
+        return(selected_data)
+    
+#child.text for child in element
+#element.tag
+#ezek nehezen implementálhatóak a jelen XML fájlra, mert annak felépítése az eredeti feladatnál lényegesen egyszerübb

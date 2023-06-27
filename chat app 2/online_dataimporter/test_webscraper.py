@@ -1,7 +1,9 @@
 import pytest
 from webscraper import APICaller
 from webscraper import ListFromXMLData
-from webscraper import ExcelWriter
+from webscraper import ExcelWriterTestable
+import openpyxl
+import os
 
 def testAPICaller():
     arfolyam = APICaller()
@@ -11,20 +13,10 @@ def testAPICaller():
     except:
       assert False
 
-def testListFromXMLData():
-    arfolyam = APICaller()
-    flowers=arfolyam.make_api_call("https://www.w3schools.com/xml/plant_catalog.xml")
 
-    xmldata = ListFromXMLData()
-    list=xmldata.CreateList(flowers, "BOTANICAL")
-    expected_output = "Aquilegia canadensis"
 
-    actual_output = list[2]
-
-    assert actual_output == expected_output
-
-def testListFromXMLData2():
-    flowers='''
+def APICallerTest():
+   flowers ='''
     <CATALOG>
       <PLANT>
         <COMMON>Bloodroot</COMMON>
@@ -44,6 +36,14 @@ def testListFromXMLData2():
       </PLANT>
     </CATALOG>
     '''
+   return flowers
+
+
+
+def testListFromXMLData():
+    arfolyam = APICaller()
+    flowers=arfolyam.make_api_call("https://www.w3schools.com/xml/plant_catalog.xml")
+
     xmldata = ListFromXMLData()
     list=xmldata.CreateList(flowers, "BOTANICAL")
     expected_output = "Aquilegia canadensis"
@@ -52,10 +52,39 @@ def testListFromXMLData2():
 
     assert actual_output == expected_output
 
-#def testExcelWriter():
-#    excel=ExcelWriter()
-#    list=("3", "hello", "pingvin", "43edg52")
-#    excel.write_data(list)
 
-    #expected_output = True
-    #assert actual_output == expected_output
+
+
+def testListFromXMLData2():
+    flowers=APICallerTest()
+    xmldata = ListFromXMLData()
+    list=xmldata.CreateList(flowers, "BOTANICAL")
+    expected_output = "Aquilegia canadensis"
+
+    actual_output = list[2]
+
+    assert actual_output == expected_output
+
+
+
+
+@pytest.mark.parametrize('path' , ['C:/Users/Acer/Documents/GitHub/Wrblr/chat app 2/online_dataimporter'])
+@pytest.mark.parametrize('backup_file' , ['Excel_backup.xlsx'])
+@pytest.mark.parametrize('file' , ['Excel.xlsx'])
+def testExcelWriter(path, file, backup_file):
+    wb = openpyxl.load_workbook(str(path) +'/' + str(file))
+    wb.save(str(path) +'/' + str(backup_file))
+    wb.close()
+
+    excel=ExcelWriterTestable()
+    list=("BOTANICAL", "hello", "pingvin", "43edg52")
+    excel.write_data(list, path, backup_file)
+
+    wb = openpyxl.load_workbook(str(path) +'/' + str(backup_file))
+    sheet = wb.active
+
+    actual_output=sheet.cell(row=2, column=2).value
+    expected_output = "hello"
+
+    os.remove(str(path) +'/' + str(backup_file))
+    assert actual_output == expected_output

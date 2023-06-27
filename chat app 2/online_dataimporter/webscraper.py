@@ -53,3 +53,22 @@ class ListFromXMLData():
 #child.text for child in element
 #element.tag
 #ezek nehezen implementálhatóak a jelen XML fájlra, mert annak felépítése az eredeti feladatnál lényegesen egyszerübb
+
+
+class ExcelWriterTestable():
+    def write_data(self, list, path, file):
+        path = path
+        file = file
+        wb = openpyxl.load_workbook(str(path) +'/' + str(file))
+        sheet = wb.active
+
+        headers = ['COMMON', 'BOTANICAL', 'ZONE', 'LIGHT', 'PRICE', 'AVAILABILITY']
+        col = headers.index(list[0]) + 1
+
+        empty_cell = 0
+        for line in list:
+            empty_cell = empty_cell+1#sheet.max_row + 1
+            if line != "":
+              sheet.cell(row=empty_cell, column=col).value = line
+            wb.save(path+"/"+file)
+            #print(str(line)+"saved to" +str(empty_cell))

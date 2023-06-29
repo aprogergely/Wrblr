@@ -2,9 +2,9 @@ from webscraper import *
 
 # returns the xml content in the "flowers" variable
 arfolyam = APICaller()
-flowers=arfolyam.make_api_call("https://www.w3schools.com/xml/plant_catalog.xml")
+flowers=arfolyam.make_api_call("http://api.napiarfolyam.hu/?bank=kh&valutanem=valuta")
 
-headers = ['COMMON', 'BOTANICAL', 'ZONE', 'LIGHT', 'PRICE', 'AVAILABILITY']
+headers = ['bank', 'datum', 'penznem', 'vetel', 'eladas']
 
 xmldata = ListFromXMLData()
 

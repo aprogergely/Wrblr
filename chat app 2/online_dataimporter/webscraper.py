@@ -9,7 +9,7 @@ class ExcelWriter():
         wb = openpyxl.load_workbook(str(path) +'/' + str(file))
         sheet = wb.active
 
-        headers = ['COMMON', 'BOTANICAL', 'ZONE', 'LIGHT', 'PRICE', 'AVAILABILITY']
+        headers = ['bank', 'datum', 'penznem', 'vetel', 'eladas']
         col = headers.index(list[0]) + 1
 
         empty_cell = 0
@@ -41,13 +41,14 @@ class ListFromXMLData():
     def CreateList(self, xml, TAG):
         root = ET.fromstring(xml)
         selected_data=[TAG]
-        for plant in root.findall("PLANT"):
-            try:
-                data_row = plant.find(TAG).text
-            except:
-                data_row = ""
+        for plant in root.findall("valuta"):
+            for plant in plant.findall("item"):
+                try:
+                    data_row = plant.find(TAG).text
+                except:
+                    data_row = ""
             
-            selected_data.append(data_row)
+                selected_data.append(data_row)
         return(selected_data)
     
 #child.text for child in element
@@ -62,7 +63,7 @@ class ExcelWriterTestable():
         wb = openpyxl.load_workbook(str(path) +'/' + str(file))
         sheet = wb.active
 
-        headers = ['COMMON', 'BOTANICAL', 'ZONE', 'LIGHT', 'PRICE', 'AVAILABILITY']
+        headers = ['bank', 'datum', 'penznem', 'vetel', 'eladas']
         col = headers.index(list[0]) + 1
 
         empty_cell = 0

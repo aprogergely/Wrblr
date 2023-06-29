@@ -41,10 +41,10 @@ class ListFromXMLData():
     def CreateList(self, xml, TAG):
         root = ET.fromstring(xml)
         selected_data=[TAG]
-        for plant in root.findall("valuta"):
-            for plant in plant.findall("item"):
+        for element in root.findall("valuta"):
+            for child in element.findall("item"):
                 try:
-                    data_row = plant.find(TAG).text
+                    data_row = child.find(TAG).text
                 except:
                     data_row = ""
             
@@ -53,7 +53,6 @@ class ListFromXMLData():
     
 #child.text for child in element
 #element.tag
-#ezek nehezen implementálhatóak a jelen XML fájlra, mert annak felépítése az eredeti feladatnál lényegesen egyszerübb
 
 
 class ExcelWriterTestable():

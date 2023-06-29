@@ -42,10 +42,10 @@ def APICallerTest():
 
 def testListFromXMLData():
     arfolyam = APICaller()
-    flowers=arfolyam.make_api_call("http://api.napiarfolyam.hu/?bank=kh&valutanem=valuta")
+    arfolyamok=arfolyam.make_api_call("http://api.napiarfolyam.hu/?bank=kh&valutanem=valuta")
 
     xmldata = ListFromXMLData()
-    list=xmldata.CreateList(flowers, "penznem")
+    list=xmldata.CreateList(arfolyamok, "penznem")
     expected_output = "AUD"
 
     actual_output = list[2]
@@ -56,9 +56,9 @@ def testListFromXMLData():
 
 
 def testListFromXMLData2():
-    flowers=APICallerTest()
+    arfolyamok=APICallerTest()
     xmldata = ListFromXMLData()
-    list=xmldata.CreateList(flowers, "penznem")
+    list=xmldata.CreateList(arfolyamok, "penznem")
     expected_output = "AUD"
 
     actual_output = list[2]

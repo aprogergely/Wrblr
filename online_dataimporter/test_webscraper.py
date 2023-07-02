@@ -67,8 +67,29 @@ def testListFromXMLData2():
 
 
 
+@pytest.fixture
+def path(request):
+    script_directory = os.path.dirname(os.path.realpath(__file__))
+    config_file_path = os.path.join(script_directory, 'Config.txt')
 
-@pytest.mark.parametrize('path' , ['C:/Users/Acer/Documents/GitHub/Wrblr/chat app 2/online_dataimporter'])
+    save_location = None
+
+    # Create a new file and fill it with the provided content
+    with open(config_file_path, 'r') as config_file:
+      for line in config_file:
+        if line.startswith('save_location'):
+            save_location = line.split('=')[1].strip()
+            break
+
+    destination_path = os.path.dirname(save_location)
+
+    # Yield the file name so the test can access it
+    yield destination_path
+
+
+
+
+#@pytest.mark.parametrize('path', [myfixture()])
 @pytest.mark.parametrize('backup_file' , ['Excel_backup.xlsx'])
 @pytest.mark.parametrize('file' , ['Excel.xlsx'])
 def testExcelWriter(path, file, backup_file):

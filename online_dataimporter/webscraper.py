@@ -1,10 +1,20 @@
 import requests
 import xml.etree.ElementTree as ET
 import openpyxl
+import os
 
 class ExcelWriter():
     def write_data(self, list):
-        path = "C:/Users/Acer/Documents/GitHub/Wrblr/chat app 2/online_dataimporter"
+        script_directory = os.path.dirname(os.path.realpath(__file__))
+        config_file_path = os.path.join(script_directory, 'Config.txt')
+
+        with open(config_file_path, 'r') as config_file:
+            for line in config_file:
+                if line.startswith('save_location'):
+                    save_location = line.split('=')[1].strip()
+                break
+
+        path = os.path.dirname(save_location)
         file = "Excel.xlsx"
         wb = openpyxl.load_workbook(str(path) +'/' + str(file))
         sheet = wb.active
